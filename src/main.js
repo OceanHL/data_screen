@@ -3,6 +3,8 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import axios from "axios";
+// 引入字体的文件
+import "./assets/font/iconfont.css";
 // 引入全局样式文件
 import "./assets/css/global.scss";
 // 请求基准路径的配置
