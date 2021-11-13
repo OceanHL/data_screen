@@ -2,7 +2,7 @@
  * @Author: jhl
  * @Date: 2021-11-12 20:12:11
  * @LastEditors: jhl
- * @LastEditTime: 2021-11-13 15:07:28
+ * @LastEditTime: 2021-11-13 19:33:01
  * @Description:
  */
 export default class SocketService {
@@ -71,8 +71,9 @@ export default class SocketService {
           this.callBackMapping[socketType].call(this, realData);
         } else if (action === "fullScreen") {
           this.callBackMapping[socketType].call(this, recvData);
-        } /* else if (action === "themeChange") {
-        } */
+        } else if (action === "themeChange") {
+          this.callBackMapping[socketType].call(this);
+        }
       }
     };
   }

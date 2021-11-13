@@ -2,7 +2,7 @@
  * @Author: jhl
  * @Date: 2021-11-10 17:53:33
  * @LastEditors: jhl
- * @LastEditTime: 2021-11-13 15:54:31
+ * @LastEditTime: 2021-11-13 17:35:52
  * @Description: 
 -->
 <template>
@@ -24,6 +24,7 @@
 
 <script>
 import { mapState } from "vuex";
+import { getThemeValue } from "@/utils/theme_utils";
 export default {
   data() {
     return {
@@ -46,6 +47,7 @@ export default {
     comStyle() {
       return {
         fontSize: this.titleFontSize + "px",
+        color: getThemeValue(this.theme).titleColor,
       };
     },
     marginStyle() {
