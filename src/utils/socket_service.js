@@ -2,7 +2,7 @@
  * @Author: jhl
  * @Date: 2021-11-12 20:12:11
  * @LastEditors: jhl
- * @LastEditTime: 2021-11-13 11:13:10
+ * @LastEditTime: 2021-11-13 15:07:28
  * @Description:
  */
 export default class SocketService {
@@ -68,10 +68,10 @@ export default class SocketService {
         const action = recvData.action;
         if (action === "getData") {
           const realData = JSON.parse(recvData.data);
-          console.log("this", this);
           this.callBackMapping[socketType].call(this, realData);
-        } /* else if (action === "fullScreen") {
-        } else if (action === "themeChange") {
+        } else if (action === "fullScreen") {
+          this.callBackMapping[socketType].call(this, recvData);
+        } /* else if (action === "themeChange") {
         } */
       }
     };

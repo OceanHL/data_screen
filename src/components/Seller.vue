@@ -2,7 +2,7 @@
  * @Author: jhl
  * @Date: 2021-11-09 21:18:31
  * @LastEditors: jhl
- * @LastEditTime: 2021-11-10 17:29:31
+ * @LastEditTime: 2021-11-13 16:03:55
  * @Description: 
 -->
 <!-- 商家销售统计的横向柱状图 -->
@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -39,7 +40,7 @@ export default {
   methods: {
     // 初始化 echartInstance 对象
     initChart() {
-      this.chartInstance = this.$echarts.init(this.$refs.seller_ref, "chalk");
+      this.chartInstance = this.$echarts.init(this.$refs.seller_ref, this.theme);
       // 对图标初始化配置的控制
       const initOption = {
         title: {
@@ -186,6 +187,17 @@ export default {
       this.chartInstance.setOption(adapterOption);
       // 手动的调用图标对象的 resize 才能产生效果
       this.chartInstance.resize();
+    },
+  },
+  computed: {
+    ...mapState(["theme"]), // 将 theme 映射为 计算属性
+  },
+  watch: {
+    theme() {
+      this.chartInstance.dispose(); // 销毁当前的图表
+      this.initChart(); // 重新以最新的主题初始化图表对象
+      this.screenAdapter(); // 更新图表的展示
+      this.updateChart(); // 重新设置数据
     },
   },
 };

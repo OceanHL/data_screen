@@ -2,7 +2,7 @@
  * @Author: jhl
  * @Date: 2021-11-11 21:02:33
  * @LastEditors: jhl
- * @LastEditTime: 2021-11-12 14:53:18
+ * @LastEditTime: 2021-11-13 16:04:20
  * @Description: 
 -->
 <template>
@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -37,6 +38,7 @@ export default {
         fontSize: this.titleFontSize + "px",
       };
     },
+    ...mapState(["theme"]),
   },
   mounted() {
     this.initChart();
@@ -49,7 +51,7 @@ export default {
   },
   methods: {
     initChart() {
-      this.chartInstance = this.$echarts.init(this.$refs.hot_ref, "chalk");
+      this.chartInstance = this.$echarts.init(this.$refs.hot_ref, this.theme);
       const initOption = {
         title: {
           text: "▎热销商品的占比",
@@ -97,7 +99,6 @@ export default {
     async getData() {
       const { data: resData } = await this.$http.get("hotproduct");
       this.allData = resData;
-      console.log("resData", resData);
       // 对 allData 进行赋值
       this.updateChart();
     },
@@ -129,12 +130,13 @@ export default {
           },
         },
         legend: {
-          itemWidth: this.titleFontSize / 2,
-          itemHeight: this.titleFontSize / 2,
+          itemWidth: this.titleFontSize,
+          itemHeight: this.titleFontSize,
           itemGap: this.titleFontSize / 2,
           textStyle: {
             fontSize: this.titleFontSize / 2,
           },
+          top: "15%",
         },
         series: [
           {
@@ -159,6 +161,14 @@ export default {
         this.currentIndex = 0;
       }
       this.updateChart();
+    },
+  },
+  watch: {
+    theme() {
+      this.chartInstance.dispose(); // 销毁当前实例对象
+      this.initChart(); // 重新以最新的主题初始化图表对象
+      this.screenAdapter(); // 更新图表的展示
+      this.updateChart(); // 重新设置数据，因为不需要重新获取数据，之前的数据在 allData 中保存着
     },
   },
 };

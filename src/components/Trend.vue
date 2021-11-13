@@ -2,7 +2,7 @@
  * @Author: jhl
  * @Date: 2021-11-10 17:53:33
  * @LastEditors: jhl
- * @LastEditTime: 2021-11-13 10:47:31
+ * @LastEditTime: 2021-11-13 15:54:31
  * @Description: 
 -->
 <template>
@@ -23,6 +23,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -52,6 +53,7 @@ export default {
         marginLeft: this.titleFontSize / 2 + "px",
       };
     },
+    ...mapState(["theme"]),
   },
   created() {
     // 在组件创建完成之后，进行回调函数的注册
@@ -75,10 +77,9 @@ export default {
     // 在组件销毁的时候，进行回调函数的取消
     this.$socket.unRegisterCallBack("trendData");
   },
-
   methods: {
     initChart() {
-      this.chartInstance = this.$echarts.init(this.$refs.trend_ref, "chalk");
+      this.chartInstance = this.$echarts.init(this.$refs.trend_ref, this.theme);
       const initOption = {
         grid: {
           left: "3%",
@@ -189,6 +190,14 @@ export default {
       this.choiceType = currentType;
       this.updateChart();
       this.showChoice = false;
+    },
+  },
+  watch: {
+    theme() {
+      this.chartInstance.dispose();
+      this.initChart();
+      this.screenAdapter();
+      this.updateChart();
     },
   },
 };

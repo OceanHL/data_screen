@@ -2,7 +2,7 @@
  * @Author: jhl
  * @Date: 2021-11-11 11:24:24
  * @LastEditors: jhl
- * @LastEditTime: 2021-11-11 15:37:11
+ * @LastEditTime: 2021-11-13 16:04:04
  * @Description: 
 -->
 <template>
@@ -15,6 +15,7 @@
 <script>
 import axios from "axios";
 import { getProvinceMapInfo } from "@/utils/map_utils";
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -34,7 +35,7 @@ export default {
   },
   methods: {
     async initChart() {
-      this.chartInstance = this.$echarts.init(this.$refs.map_ref, "chalk");
+      this.chartInstance = this.$echarts.init(this.$refs.map_ref, this.theme);
       // 获取中国地图的矢量数据
       // http://localhost:8999/static/map/china.json
       // 由于我们现在获取的地图矢量数据并不是位于KOA2的后台，所以砸门不能使用 this.$http
@@ -144,6 +145,17 @@ export default {
         },
       };
       this.chartInstance.setOption(revertOption);
+    },
+  },
+  computed: {
+    ...mapState(["theme"]),
+  },
+  watch: {
+    theme() {
+      this.chartInstance.dispose(); // 销毁当前的图表
+      this.initChart(); // 重新以最新的主题初始化图表对象
+      this.screenAdapter(); // 更新图表的展示
+      this.updateChart(); // 重新设置数据
     },
   },
 };
