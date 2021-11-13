@@ -2,7 +2,7 @@
  * @Author: jhl
  * @Date: 2021-11-10 17:53:33
  * @LastEditors: jhl
- * @LastEditTime: 2021-11-11 11:14:34
+ * @LastEditTime: 2021-11-13 10:47:31
  * @Description: 
 -->
 <template>
@@ -53,15 +53,29 @@ export default {
       };
     },
   },
+  created() {
+    // 在组件创建完成之后，进行回调函数的注册
+    this.$socket.registerCallBack("trendData", this.getData);
+  },
   mounted() {
     this.initChart();
-    this.getData();
+    // this.getData();
+    // 发送数据给服务器，告诉服务器，我现在需要数据
+    this.$socket.send({
+      action: "getData",
+      socketType: "trendData",
+      chartName: "trend",
+      value: "",
+    });
     window.addEventListener("resize", this.screenAdapter);
     this.screenAdapter();
   },
   destroyed() {
     window.removeEventListener("resize", this.screenAdapter);
+    // 在组件销毁的时候，进行回调函数的取消
+    this.$socket.unRegisterCallBack("trendData");
   },
+
   methods: {
     initChart() {
       this.chartInstance = this.$echarts.init(this.$refs.trend_ref, "chalk");
@@ -91,10 +105,10 @@ export default {
       };
       this.chartInstance.setOption(initOption);
     },
-    async getData() {
-      const { data: resData } = await this.$http.get("trend");
-      this.allData = resData;
-      console.log(resData);
+    // ret 就是服务端发送过来的图表数据
+    async getData(ret) {
+      // const { data: resData } = await this.$http.get("trend");
+      this.allData = ret;
       // 对 allData 进行赋值
       this.updateChart();
     },
